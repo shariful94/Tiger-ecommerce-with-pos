@@ -1,1 +1,1 @@
-storage route have to add serially
+in config view slugaable session service  have to add serially
