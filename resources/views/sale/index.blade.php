@@ -214,13 +214,15 @@ $.ajax({
                     comment: $("#salenote").val()
                         },
                 success: function(response) {
-                    console.log(response);
-                  $("#responseMessage").html(response);
-                //   var w = open(BASE_URL + "/invoice/details/13", "InvWindow", "width=600,height=300");
-                //   w.print();
-                  
-                  //exit();
-                    // location.reload();
+                    //console.log(response);
+                    //return;
+                //   $("#responseMessage").html(response);
+                //   console.log(response.id);
+                    if(!response.error){
+                    var w = open(BASE_URL + "/order/details/"+response.orderid , "InvWindow", "width=800,height=500");
+                    w.print();
+                    location.reload();
+                    }
 
                 }
             });            
