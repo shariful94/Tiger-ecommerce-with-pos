@@ -4,6 +4,10 @@
     Contact
 @endsection
 
+@section('catmenu')
+@include('partial.catmenu',['categories'=>$categories])
+@endsection
+
 @section('content')
     
     
@@ -12,7 +16,7 @@
         <div class="row px-xl-5">
             <div class="col-12">
                 <nav class="breadcrumb bg-light mb-30">
-                    <a class="breadcrumb-item text-dark" href="#">Home</a>
+                    <a class="breadcrumb-item text-dark" href="{{url('/')}}">Home</a>
                     <span class="breadcrumb-item active">Contact</span>
                 </nav>
             </div>
@@ -27,34 +31,32 @@
         <div class="row px-xl-5">
             <div class="col-lg-7 mb-5">
                 <div class="contact-form bg-light p-30">
+                    @include('partial.flash')
+                    @include("partial.error")
+
                     <div id="success"></div>
-                    <form name="sentMessage" id="contactForm" novalidate="novalidate">
-                        <div class="control-group">
-                            <input type="text" class="form-control" id="name" placeholder="Your Name"
-                                required="required" data-validation-required-message="Please enter your name" />
-                            <p class="help-block text-danger"></p>
-                        </div>
-                        <div class="control-group">
-                            <input type="email" class="form-control" id="email" placeholder="Your Email"
-                                required="required" data-validation-required-message="Please enter your email" />
-                            <p class="help-block text-danger"></p>
-                        </div>
-                        <div class="control-group">
-                            <input type="text" class="form-control" id="subject" placeholder="Subject"
-                                required="required" data-validation-required-message="Please enter a subject" />
-                            <p class="help-block text-danger"></p>
-                        </div>
-                        <div class="control-group">
-                            <textarea class="form-control" rows="8" id="message" placeholder="Message"
-                                required="required"
-                                data-validation-required-message="Please enter your message"></textarea>
-                            <p class="help-block text-danger"></p>
-                        </div>
-                        <div>
-                            <button class="btn btn-primary py-2 px-4" type="submit" id="sendMessageButton">Send
-                                Message</button>
-                        </div>
-                    </form>
+                    {{Form::open(['route' => 'contact.store','class'=>'user','enctype'=>'multipart/form-data'])}}
+
+                    <div class="control-group pb-3">
+                        {!! Form::text('name', null, ['required', 'class'=>'form-control', 'id'=>'name', 'placeholder'=>'Your Name']) !!}
+                    </div>
+                    <div class="control-group pb-3">
+                        {!! Form::email('email', null, ['required', 'class'=>'form-control', 'id'=>'email', 'placeholder'=>'Your Email']) !!}
+                    </div>
+                    <div class="control-group pb-3">
+                        {!! Form::text('phone', null, ['required', 'class'=>'form-control', 'id'=>'phone', 'placeholder'=>'Your Phone']) !!}
+                    </div>
+                    <div class="control-group pb-3">
+                        {!! Form::text('subject', null, ['required', 'class'=>'form-control', 'id'=>'subject', 'placeholder'=>'Subject']) !!}
+                    </div>
+                    <div class="control-group pb-3">
+                        {!! Form::textarea('message', null, ['required', 'class'=>'form-control', 'id'=>'message', 'placeholder'=>'Message']) !!}
+                    </div>
+        
+                    <div class="form-group">
+                        {!! Form::submit('Send Message', ['class'=>'btn btn-primary btn-profile btn-block']) !!}
+                    </div>
+                    {!! Form::close() !!}
                 </div>
             </div>
             <div class="col-lg-5 mb-5">
@@ -64,8 +66,8 @@
                 </div>
                 <div class="bg-light p-30 mb-3">
                     <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>24/4, Mirpur, Dhaka-1216</p>
-                    <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>tigereco@gmail.com</p>
-                    <p class="mb-2"><i class="fa fa-phone-alt text-primary mr-3"></i>01234567890</p>
+                    <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>zayedbd24@gmail.com</p>
+                    <p class="mb-2"><i class="fa fa-phone-alt text-primary mr-3"></i>+8801629999666</p>
                 </div>
             </div>
         </div>

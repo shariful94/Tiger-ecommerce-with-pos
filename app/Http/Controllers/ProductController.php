@@ -10,11 +10,12 @@ use App\Models\Category;
 use App\Models\Productimage;
 use App\Models\Subcategory;
 use App\Models\Supplier;
-use Illuminate\Http\Client\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
+use PDF;
 
 class ProductController extends Controller
 {
@@ -29,7 +30,6 @@ class ProductController extends Controller
         return view("product.index")
         ->with('allproduct',$allproduct)
         ->with('user',Auth::user());
-        // dd($allsubcategory->categories);
     }
 
     /**
@@ -40,7 +40,8 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::pluck('name','id');
-        $subcategories = Subcategory::pluck('name','id');
+        // $subcategories = Subcategory::pluck('name','id');
+        $subcategories = [];
         $brands = Brand::pluck('name','id');
         $suppliers = Supplier::pluck('name','id');
         return view("product.create")
@@ -132,6 +133,7 @@ class ProductController extends Controller
         // return view('shop.details',compact('product'));
     }
 
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -142,7 +144,7 @@ class ProductController extends Controller
     {
         $productimages = new Productimage();
         $categories = Category::pluck('name','id');
-        $subcategories = Subcategory::pluck('name','id');
+        $subcategories = Subcategory::where('category_id',$product->category_id)->pluck('name','id');
         $brands = Brand::pluck('name','id');
         $suppliers = Supplier::pluck('name','id');
         return view('product.edit',compact('product'))
@@ -163,31 +165,11 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        // dd($request);
-        //upload
-        $path = $request->file('name')->store('public/products');
-        $storagepath = Storage::path($path);
-        $img = Image::make($storagepath);
-
-        // resize image instance
-        $img->resize(500, 500);
-
-        // insert a watermark
-        // $img->insert('public/watermark.png');
-
-        // save image in desired format
-        $img->save($storagepath);
-
-        if($product->image){
-            Storage::delete($product->image);
-        }
-
         $product->name = $request->name;
         $product->brand_id = $request->brand_id;
         $product->supplier_id = $request->supplier_id;
         $product->category_id = $request->category_id;
         $product->subcategory_id = $request->subcategory_id;
-        $product->image = $path;
         $product->feature = $request->feature;
         $product->description = $request->description;
         $product->information = $request->information;
@@ -199,11 +181,38 @@ class ProductController extends Controller
         $product->quantity = $request->quantity;
 
         if($product->save()){
+            if($request->file('image')){
+                for ($i=0; $i < count($request->file('image')); $i++) { 
+                    // $path = $request->file('image')[$i];
+                    $path = $request->file('image')[$i]->store('public/products');
+                    $storagepath = Storage::path($path);
+                    $img = Image::make($storagepath);
+            
+                    // resize image instance
+                    $img->resize(500, 500);
+            
+                    // insert a watermark
+                    // $img->insert('public/watermark.png');
+            
+                    // save image in desired format
+                    $img->save($storagepath);
+                    $pi = new Productimage();
+                    $pi->product_id = $product->id;
+                    $pi->name = $path;                
+                    $pi->save();
+                }
+            }
+            else{
+                return back()->with('message','Product image not found');
+            }
             return back()->with('message',"Update Successfully!!!");
         }
         else{
             return back()->with('message',"Update Failed!!!");
         }
+        
+
+        
     }
 
     /**
@@ -214,16 +223,43 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        //dd($product);
+        //$flight = Product::find($product->id);
+ 
+        //$flight->delete();
+        //echo "hi";
         if(Product::destroy($product->id)){
-            return back()->with('message',$product->id. ' Deleted!!!!');
+            return back()->with('message',$product->slug. ' Deleted!!!!');
+        }
+        else{
+            return back()->with('message','Cannot delete product.');
         }
     }
+    public function export_product_pdf()
+    {
+        $allproduct = Product::get();
+        $pdf = PDF::loadView('product.pdf',compact('allproduct'));
+        // $pdf = PDF::loadView('supplier.pdf');
+        return $pdf->download('Productlist.pdf');
+    }
 
-    public function search(Request $request){
-        $s = $request->term;
-        $products = Product::where('name','LIKE',"%{$s}%")->get();
+    public function delete(Request $request)
+    {
+        // Log::info($request->product_id);
+        Product::destroy($request->product_id);
+    }
 
-        //return the product in json format
+    public function imgDel(Request $request)
+    {
+        // echo $request->id;
+        // Log::info($request);
+        $image = Productimage::find($request->id)->name;
+        if(Productimage::destroy($request->id)){
+            Storage::delete($image);
+            return response()->json(['done'=> 1,'message'=>'Image Deleted']);
+        }else{
+            return response()->json(['done'=> 0,'message'=>'Image Not Deleted']);
+        }
 
     }
 

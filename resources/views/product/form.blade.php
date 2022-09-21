@@ -17,20 +17,36 @@
 </div>
 <div class="form-group row">
     <div class="col-sm-6 mb-3 mb-sm-0">
-        {!! Form::select('subcategory_id', [], null, ['placeholder' => 'Select Subcategory', 'class'=>'form-control form-control-profile','id'=>'subcategory_id']) !!}
+        {!! Form::select('subcategory_id', $subcategories, null, ['placeholder' => 'Select Subcategory', 'class'=>'form-control form-control-profile','id'=>'subcategory_id']) !!}
     </div>
     <div class="col-sm-6">
         {!! Form::file('image[]', ['required','multiple', 'class'=>'form-control form-control-profile', 'id'=>'image']) !!}
     </div>
 </div>
-<div class="form-group">
-    {!! Form::text('feature', null, ['required', 'class'=>'form-control form-control-profile', 'id'=>'feature', 'placeholder'=>'Feature']) !!}
+<div class="form-group row">
+@isset($product)
+@forelse ($product->productimages as $img)
+<div class="col-sm-3">
+<div class="image-area">
+  <img src="{{ url(Storage::url($img->name)) }}"  alt="Preview">
+  <a class="remove-image" data-id="{{$img->id}}" href="javascript:void(0)" style="display: inline;">&#215;</a>
+</div>
+</div>
+    
+@empty
+    <p>No Image available</p>
+@endforelse
+@endisset
+    
 </div>
 <div class="form-group">
-    {!! Form::text('description', null, ['required', 'class'=>'form-control form-control-profile', 'id'=>'description', 'placeholder'=>'Description']) !!}
+    {!! Form::textarea('feature', null, ['required', 'class'=>'ckeditor form-control form-control-profile', 'id'=>'feature', 'placeholder'=>'Feature']) !!}
 </div>
 <div class="form-group">
-    {!! Form::text('information', null, ['required', 'class'=>'form-control form-control-profile', 'id'=>'information', 'placeholder'=>'Information']) !!}
+    {!! Form::textarea('description', null, ['required', 'class'=>'ckeditor form-control form-control-profile', 'id'=>'description', 'placeholder'=>'Description']) !!}
+</div>
+<div class="form-group">
+    {!! Form::textarea('information', null, ['required', 'class'=>'ckeditor form-control form-control-profile', 'id'=>'information', 'placeholder'=>'Information']) !!}
 </div>
 <div class="form-group row">
     <div class="col-sm-4 mb-3 mb-sm-0">

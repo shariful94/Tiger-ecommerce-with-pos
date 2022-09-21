@@ -5,7 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use PDF;
 
 class CustomerController extends Controller
 {
@@ -101,8 +106,57 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        if(Customer::destroy($customer->id)){
-            return back()->with('message',$customer->id. ' Deleted!!!!');
+        // if(Customer::destroy($customer->id)){
+        //     return back()->with('message',$customer->id. ' Deleted!!!!');
+        // }
+    }
+    public function export_customer_pdf()
+    {
+        $allcustomer = customer::get();
+        $pdf = PDF::loadView('customer.pdf',compact('allcustomer'));
+        // $pdf = PDF::loadView('supplier.pdf');
+        return $pdf->download('Customerlist.pdf');
+    }
+    public function newcustomer(Request $request){
+/*         // echo "hi";
+        return response()->json(['a'=>"b"]);
+        */
+/*         return response()->json([
+            'name' => $request->name,
+            'mobile' => $request->mobile,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),        
+        ]);  */  
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:customers'],
+            'mobile' => ['required', 'string', 'max:15', 'unique:customers'],
+            'password' => ['required'],
+        ]);
+        
+        if ($validator->fails())
+        {
+            return response()->json(['success' => false,'errors'=>$validator->errors()->all()]);
+        }    
+
+        //return response()->json($m);
+        $customer = Customer::create([
+            'name' => $request->name,
+            'mobile' => $request->mobile,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),        
+        ]);
+        if($customer){
+            return response()->json([
+                'id' => $customer->id,
+                'name'=>$customer->name,
+                'mobile'=>$customer->mobile,
+                'success' => true,
+                'errors'=>null
+            ]);
+        }
+        else{
+
         }
     }
 }

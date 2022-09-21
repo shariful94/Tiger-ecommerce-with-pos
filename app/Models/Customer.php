@@ -58,8 +58,20 @@ class Customer extends Model
         return 'slug';
     }
 
-    public function customerprofile()
+    public function Customerprofile()
     {
     return $this->hasOne('App\Models\CustomerProfile');
+    }
+    public function Orders()
+    {
+    return $this->hasMany('App\Models\Order');
+    }
+    public function Wishlists()
+    {
+        return $this->hasMany('App\Models\Wishlist');
+    }
+    public function CodOrders()
+    {
+    return $this->hasMany('App\Models\Codorder');
     }
 }

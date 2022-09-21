@@ -4,6 +4,10 @@
     {{$brands->name}}
 @endsection
 
+@section('catmenu')
+@include('partial.catmenu',['categories'=>$categories])
+@endsection
+
 @section('content')
     
     <!-- Breadcrumb Start -->
@@ -11,9 +15,8 @@
         <div class="row px-xl-5">
             <div class="col-12">
                 <nav class="breadcrumb bg-light mb-30">
-                    <a class="breadcrumb-item text-dark" href="#">Home</a>
-                    <a class="breadcrumb-item text-dark" href="#">Shop</a>
-                    <span class="breadcrumb-item active">Shop List</span>
+                    <a class="breadcrumb-item text-dark" href="{{url('/')}}">Home</a>
+                    <span class="breadcrumb-item active">{{$brands->name}}</span>
                 </nav>
             </div>
         </div>
@@ -28,126 +31,24 @@
                 <!-- Price Start -->
                 <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Filter by price</span></h5>
                 <div class="bg-light p-4 mb-30">
-                    <form>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" checked id="price-all">
-                            <label class="custom-control-label" for="price-all">All Price</label>
-                            <span class="badge border font-weight-normal">1000</span>
+                    {{Form::open(['route' => 'contact.store','class'=>'user','enctype'=>'multipart/form-data'])}}
+                    <div class="control-group pb-3">
+                        {!! Form::number('min', null, ['required', 'class'=>'form-control', 'id'=>'min', 'placeholder'=>'Min']) !!}
+                    </div>
+                    <div class="control-group pb-3">
+                        {!! Form::number('max', null, ['required', 'class'=>'form-control', 'id'=>'max', 'placeholder'=>'Max']) !!}
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-6 mb-3 mb-sm-0">
+                            {!! Form::submit('Apply', ['class'=>'btn btn-primary btn-profile btn-block']) !!}
                         </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-1">
-                            <label class="custom-control-label" for="price-1">&#2547; 0 - &#2547; 2000</label>
-                            <span class="badge border font-weight-normal">150</span>
+                        <div class="col-sm-6">
+                            {!! Form::submit('Reset', ['class'=>'btn btn-primary btn-profile btn-block']) !!}
                         </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-2">
-                            <label class="custom-control-label" for="price-2">&#2547; 2000 - &#2547; 10000</label>
-                            <span class="badge border font-weight-normal">295</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-3">
-                            <label class="custom-control-label" for="price-3">&#2547; 10000 - &#2547; 50000</label>
-                            <span class="badge border font-weight-normal">246</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-4">
-                            <label class="custom-control-label" for="price-4">&#2547; 50000 - &#2547; 100000</label>
-                            <span class="badge border font-weight-normal">145</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-5">
-                            <label class="custom-control-label" for="price-5">&#2547; 100000 - &#2547; 200000</label>
-                            <span class="badge border font-weight-normal">168</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                            <input type="checkbox" class="custom-control-input" id="price-6">
-                            <label class="custom-control-label" for="price-6">&#2547; 200000 - &infin;</label>
-                            <span class="badge border font-weight-normal">180</span>
-                        </div>
-                    </form>
+                    </div>
+                    {!! Form::close() !!}
                 </div>
                 <!-- Price End -->
-                
-                <!-- Color Start -->
-                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Filter by category</span></h5>
-                <div class="bg-light p-4 mb-30">
-                    <form>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" checked id="color-all">
-                            <label class="custom-control-label" for="price-all">All Category</label>
-                            <span class="badge border font-weight-normal">1000</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="color-1">
-                            <label class="custom-control-label" for="color-1">Desktop</label>
-                            <span class="badge border font-weight-normal">150</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="color-2">
-                            <label class="custom-control-label" for="color-2">Laptop</label>
-                            <span class="badge border font-weight-normal">295</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="color-3">
-                            <label class="custom-control-label" for="color-3">Component</label>
-                            <span class="badge border font-weight-normal">246</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="color-4">
-                            <label class="custom-control-label" for="color-4">Monitor</label>
-                            <span class="badge border font-weight-normal">145</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="color-5">
-                            <label class="custom-control-label" for="color-5">UPS</label>
-                            <span class="badge border font-weight-normal">168</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                            <input type="checkbox" class="custom-control-input" id="color-6">
-                            <label class="custom-control-label" for="color-6">Camera</label>
-                            <span class="badge border font-weight-normal">168</span>
-                        </div>
-                    </form>
-                </div>
-                <!-- Color End -->
-
-                <!-- Size Start -->
-                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Filter by brand</span></h5>
-                <div class="bg-light p-4 mb-30">
-                    <form>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" checked id="size-all">
-                            <label class="custom-control-label" for="size-all">All Brand</label>
-                            <span class="badge border font-weight-normal">1000</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="size-1">
-                            <label class="custom-control-label" for="size-1">Apple</label>
-                            <span class="badge border font-weight-normal">150</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="size-2">
-                            <label class="custom-control-label" for="size-2">Asus</label>
-                            <span class="badge border font-weight-normal">295</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="size-3">
-                            <label class="custom-control-label" for="size-3">HP</label>
-                            <span class="badge border font-weight-normal">246</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="size-4">
-                            <label class="custom-control-label" for="size-4">Dell</label>
-                            <span class="badge border font-weight-normal">145</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                            <input type="checkbox" class="custom-control-input" id="size-5">
-                            <label class="custom-control-label" for="size-5">Lenovo</label>
-                            <span class="badge border font-weight-normal">168</span>
-                        </div>
-                    </form>
-                </div>
-                <!-- Size End -->
             </div>
             <!-- Shop Sidebar End -->
 
@@ -190,10 +91,10 @@
                                 @else            
                                 @endif
                                 <div class="product-action">
-                                    <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-                                    <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-                                    <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                                    <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
+                                    <button class="btn btn-outline-dark btn-square"><i class="fa fa-shopping-cart mr-1"></i> </button>
+                                    <button class="btn btn-outline-dark btn-square favbtn" data-productid="{{$product->id}}"><i class="far fa-heart mr-1"></i> </button>
+                                    <button class="btn btn-outline-dark btn-square" id=""><i class="fa fa-sync-alt mr-1"></i> </button>
+                                    <button class="btn btn-outline-dark btn-square" id=""><i class="fa fa-search mr-1"></i> </button>
                                 </div>
                             </div>
                
@@ -217,7 +118,8 @@
                     </div>
                     @endforeach
                     <div class="col-12">
-                        {{-- {{$category->products->links()}} --}}
+                        {{-- {{$brands->products->links()}} --}}
+                        {{-- {{$brands->products->onEachSide(1)->links()}} --}}
                     </div>
                     <div class="col-12">
                         <nav>
@@ -238,4 +140,41 @@
     <!-- Shop End -->
 
 
+@endsection
+
+@section('script')
+    <script>
+        var BASE_URL = "{{url('/')}}";
+        $(document).ready(function() {
+            $(".favbtn").click(function() {
+                var productid = $(this).data("productid");
+                // alert(productid);
+                // return;
+                $.post( BASE_URL + "/favourite",
+                {
+                    pid: productid
+                }, function(d) {
+                    if(d.error){
+                        Swal.fire({
+                        position: 'top',
+                        icon: 'warning',
+                        title: d.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                        })
+                    }else
+                    {
+                        $("span.wishlistcount").html(d.ti);
+                        Swal.fire({
+                        position: 'top',
+                        icon: 'success',
+                        title: d.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                        })
+                    };
+                })
+            });
+        });
+    </script>
 @endsection

@@ -17,11 +17,11 @@
             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                 aria-labelledby="dropdownMenuLink">
                 {{-- <div class="dropdown-header">Dropdown Header:</div> --}}
-                <a class="dropdown-item" href="{{url('customer/create')}}">
+                {{-- <a class="dropdown-item" href="{{url('customer/create')}}">
                     <i class="fas fa-plus fa-sm fa-fw mr-2 text-primary"></i>
                     Add
                 </a>
-                <div class="dropdown-divider"></div>
+                <div class="dropdown-divider"></div> --}}
                 <a class="dropdown-item" href="{{url('export_customer_pdf')}}">
                     <i class="fas fa-file-pdf fa-sm fa-fw mr-2 text-primary"></i>
                     PDF
@@ -47,7 +47,7 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Mobile</th>
-                        <th>Address</th>
+                        {{-- <th>Address</th> --}}
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -57,7 +57,7 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Mobile</th>
-                        <th>Address</th>
+                        {{-- <th>Address</th> --}}
                         <th>Action</th>
                     </tr>
                 </tfoot>
@@ -68,16 +68,20 @@
                         <td>{{ $customer->name }}</td>
                         <td>{{ $customer->email }}</td>
                         <td>{{ $customer->mobile }}</td>
-                        <td>{{ $customer->address }}</td>
+                        {{-- <td>{{ $customer->address }}</td> --}}
                         <td class="d-flex justify-content-center">
-                            {!! Form::open(['method' => 'delete','route' => ['customer.destroy', $customer->slug],'id'=>'deleteform']) !!}
+                       {{--      {!! Form::open(['method' => 'delete','route' => ['customer.destroy', $customer->slug],'id'=>'deleteform']) !!}
                             <a href="javascript:void(0)" class="btn btn-primary btn-circle btn-sm" title="Delete" onclick="event.preventDefault();if (!confirm('Are you sure?')) return; document.getElementById('deleteform').submit();">
                                 <i class="fas fa-trash"></i>
-                            </a>
-                            {!! Form::close() !!}
-                            <a href="{{url('customer/'.$customer->slug.'/edit')}}" class="btn btn-primary btn-circle btn-sm" title="Edit">
+                            </a> --}}
+                            {{-- {!! Form::close() !!} --}}
+                            {{-- <div class="input-group-btn mx-2">
+                                <button class="btn btn-sm btn-danger delete" type="button" value="{{$customer->id}}"><i class="fa fa-times"></i></button>
+                            </div> --}}
+
+                            {{-- <a href="{{url('customer/'.$customer->slug.'/edit')}}" class="btn btn-primary btn-circle btn-sm" title="Edit">
                                 <i class="fas fa-edit"></i>
-                            </a>
+                            </a> --}}
                             {{-- <a href="#" class="btn btn-primary btn-circle btn-sm" title="Delete">
                                 <i class="fas fa-trash"></i>
                             </a> --}}
@@ -92,4 +96,52 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('script')
+    <script>
+    var BASE_URL = "{{url('/')}}";
+        $(document).ready(function(){
+            $('.delete').click(function(e){
+                e.preventDefault();
+                var id = $(this).val();
+                // alert(id);
+                Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        method: 'POST',
+                        url: BASE_URL + '/customer_delete',
+                        data: {
+                            'customer_id' : id,
+                            'delete' : true
+                        },
+                        success: function(response){
+                            Swal.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        );
+                        // $("#wish_table").load(location.href + " #wish_table");
+
+                        setTimeout(function(){
+                        location.reload();
+                        }, 1000);
+                        }
+                    })
+                    
+                }
+                })
+            });
+        });
+
+        
+    </script>
 @endsection

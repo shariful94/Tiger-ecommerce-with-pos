@@ -22,7 +22,7 @@
                     Add
                 </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">
+                <a class="dropdown-item" href="{{url('export_expense_pdf')}}">
                     <i class="fas fa-file-pdf fa-sm fa-fw mr-2 text-primary"></i>
                     PDF
                 </a>
@@ -33,6 +33,11 @@
                 <a class="dropdown-item" href="#">
                     <i class="fas fa-file-csv fa-sm fa-fw mr-2 text-primary"></i>
                     CSV
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{{url('expense/trashed')}}">
+                    <i class="fas fa-trash-alt fa-sm fa-fw mr-2 text-primary"></i>
+                    Trashed
                 </a>
             </div>
         </div>

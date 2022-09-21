@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateExpenseRequest;
 use App\Models\Account;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use PDF;
 
 class ExpenseController extends Controller
 {
@@ -131,5 +132,36 @@ class ExpenseController extends Controller
         if(Expense::destroy($expense->id)){
             return back()->with('message',$expense->id. ' Deleted!!!!');
         }
+    }
+    public function export_expense_pdf()
+    {
+        $allexpense = Expense::get();
+        $pdf = PDF::loadView('expense.pdf',compact('allexpense'));
+        // $pdf = PDF::loadView('supplier.pdf');
+        return $pdf->download('Expenselist.pdf');
+    }
+    public function trashed()
+    {
+        $allexpense = Expense::onlyTrashed()->get();
+        return view('expense.trashed',compact('allexpense'))->with('user',Auth::user());
+    }
+
+    public function trashedRestore($id){
+        $expense = Expense::onlyTrashed()->findOrFail($id);
+        $expense->restore();
+        return back();
+    }
+
+    public function trashedDelete($id){
+        $expense = Expense::onlyTrashed()->findOrFail($id);
+        $expense->forceDelete();
+        return back();
+    }
+    public function export_expenselist_pdf()
+    {
+        $allexpense = Expense::onlyTrashed()->get();
+        $pdf = PDF::loadView('expense.pdflist',compact('allexpense'));
+        // $pdf = PDF::loadView('supplier.pdf');
+        return $pdf->download('expenselist.pdf');
     }
 }

@@ -17,7 +17,7 @@
             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                 aria-labelledby="dropdownMenuLink">
                 {{-- <div class="dropdown-header">Dropdown Header:</div> --}}
-                <a class="dropdown-item" href="{{url('category/create')}}">
+                <a class="dropdown-item" href="{{url('cat/create')}}">
                     <i class="fas fa-plus fa-sm fa-fw mr-2 text-primary"></i>
                     Add
                 </a>
@@ -60,30 +60,30 @@
                     </tr>
                 </tfoot>
                 <tbody>
-                    @foreach ($allcategory as $category)
+                    @foreach ($allcategory as $cat)
                     <tr>
-                        <td>{{ $category->id }}</td>
-                        <td>{{ $category->name }}</td>
+                        <td>{{ $cat->id }}</td>
+                        <td>{{ $cat->name }}</td>
                         <td>
-                            @if ($category->icon)
-                                <img src="{{url(Storage::url($category->icon))}}" class="iconimage" alt="Icon">       
+                            @if ($cat->icon)
+                                <img src="{{url(Storage::url($cat->icon))}}" class="iconimage" alt="Icon">       
                             @else            
                             @endif
                         </td>
-                        <td>{{ $category->description }}</td>
+                        <td>{{ $cat->description }}</td>
                         <td class="d-flex justify-content-center">
-                            {!! Form::open(['method' => 'delete','route' => ['category.destroy', $category->slug],'id'=>'deleteform']) !!}
+                            {!! Form::open(['method' => 'delete','route' => ['cat.destroy', $cat->slug],'id'=>'deleteform']) !!}
                             <a href="javascript:void(0)" class="btn btn-primary btn-circle btn-sm" title="Delete" onclick="event.preventDefault();if (!confirm('Are you sure?')) return; document.getElementById('deleteform').submit();">
                                 <i class="fas fa-trash"></i>
                             </a>
                             {!! Form::close() !!}
-                            <a href="{{url('category/'.$category->slug.'/edit')}}" class="btn btn-primary btn-circle btn-sm" title="Edit">
+                            <a href="{{url('cat/'.$cat->slug.'/edit')}}" class="btn btn-primary btn-circle btn-sm" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>
                             {{-- <a href="#" class="btn btn-primary btn-circle btn-sm" title="Delete">
                                 <i class="fas fa-trash"></i>
                             </a> --}}
-                            <a href="{{url('category/'.$category->slug)}}" class="btn btn-primary btn-circle btn-sm" title="View">
+                            <a href="{{url('cat/'.$cat->slug)}}" class="btn btn-primary btn-circle btn-sm" title="View">
                                 <i class="fas fa-eye"></i>
                             </a>
                         </td>

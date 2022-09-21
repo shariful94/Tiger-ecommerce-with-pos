@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateBrandRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
+use PDF;
 
 class BrandController extends Controller
 {
@@ -72,9 +73,9 @@ class BrandController extends Controller
      * @param  \App\Models\Brand  $brand
      * @return \Illuminate\Http\Response
      */
-    public function show(Brand $brand)
+    public function show(Brand $brnd)
     {
-        return view('brand.show',compact('brand'))->with('user',Auth::user());
+        return view('brand.show',compact('brnd'))->with('user',Auth::user());
     }
 
     /**
@@ -83,9 +84,9 @@ class BrandController extends Controller
      * @param  \App\Models\Brand  $brand
      * @return \Illuminate\Http\Response
      */
-    public function edit(Brand $brand)
+    public function edit(Brand $brnd)
     {
-        return view('brand.edit',compact('brand'))->with('user',Auth::user());
+        return view('brand.edit',compact('brnd'))->with('user',Auth::user());
     }
 
     /**
@@ -95,7 +96,7 @@ class BrandController extends Controller
      * @param  \App\Models\Brand  $brand
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateBrandRequest $request, Brand $brand)
+    public function update(UpdateBrandRequest $request, Brand $brnd)
     {
         //upload
         $path = $request->file('icon')->store('public/brands');
@@ -112,15 +113,15 @@ class BrandController extends Controller
         $img->save($storagepath);
 
 
-        if($brand->icon){
-            Storage::delete($brand->icon);
+        if($brnd->icon){
+            Storage::delete($brnd->icon);
         }
 
-        $brand->name = $request->name;
-        $brand->icon = $path;
-        $brand->description = $request->description;
+        $brnd->name = $request->name;
+        $brnd->icon = $path;
+        $brnd->description = $request->description;
 
-        if($brand->save()){
+        if($brnd->save()){
             return back()->with('message',"Update Successfully!!!");
         }
         else{
@@ -134,10 +135,35 @@ class BrandController extends Controller
      * @param  \App\Models\Brand  $brand
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Brand $brand)
+    public function destroy(Brand $brnd)
     {
-        if(Brand::destroy($brand->id)){
-            return back()->with('message',$brand->id. ' Deleted!!!!');
+        if(Brand::destroy($brnd->slug)){
+            return back()->with('message',$brnd->slug. ' Deleted!!!!');
         }
+    }
+    public function export_brand_pdf()
+    {
+        $allbrand = Brand::get();
+        $pdf = PDF::loadView('brand.pdf',compact('allbrand'));
+        // $pdf = PDF::loadView('supplier.pdf');
+        return $pdf->download('Brandlist.pdf');
+    }
+
+    public function trashed()
+    {
+        $allbrand = Brand::onlyTrashed()->get();
+        return view('brand.trashed',compact('allbrand'))->with('user',Auth::user());
+    }
+
+    public function trashedRestore($id){
+        $brand = Brand::onlyTrashed()->findOrFail($id);
+        $brand->restore();
+        return back();
+    }
+
+    public function trashedDelete($id){
+        $brand = Brand::onlyTrashed()->findOrFail($id);
+        $brand->forceDelete();
+        return back();
     }
 }

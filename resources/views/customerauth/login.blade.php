@@ -38,14 +38,16 @@
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>                                        
                                     </div>
 
                                     <!-- Session Status -->
                                     <x-auth-session-status class="mb-4 alert alert-danger" :status="session('status')" />
 
                                     <!-- Validation Errors -->
-                                    <x-auth-validation-errors class="mb-4 alert alert-danger" :errors="$errors" />
+                                    {{-- <x-auth-validation-errors class="mb-4 alert alert-danger" :errors="$errors" /> --}}
+                                    @include('partial.flash')
+                                    @include("partial.error")
 
                                     <form class="user" method="POST" action="{{ route('customerlogin') }}">
                                         @csrf

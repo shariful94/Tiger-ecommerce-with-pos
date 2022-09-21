@@ -39,8 +39,13 @@
                 </div>
             </div>
             <div class="col-lg-4">
-                <div class="form-group">
-                    {!! Form::text('customersearch', null, ['required', 'class'=>'form-control form-control-profile', 'id'=>'customersearch', 'placeholder'=>'Enter Customer Mobile Number']) !!}
+                <div class="form-group row">
+                    <div class="col-10">
+                        {!! Form::text('customersearch', null, ['required', 'class'=>'form-control form-control-profile', 'id'=>'customersearch', 'placeholder'=>'Enter Customer Mobile Number']) !!}
+                    </div>
+                    <div class="col-1">
+                        <button type="button" class="btn btn-primary btn-profile" data-toggle="modal" data-target="#newCustomerModal"> + </button>
+                    </div>
                 </div>
                 <div id="dyn_customer"></div>
                 <hr>
@@ -78,6 +83,47 @@
     </div>
 </div>
 
+<!-- new customer modal -->
+<!-- Modal -->
+<div class="modal fade" id="newCustomerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <div class="form-group row">
+    <div class="col-sm-6 mb-3 mb-sm-0">
+        {!! Form::text('ncname', null, ['required', 'class'=>'form-control form-control-profile', 'id'=>'ncname', 'placeholder'=>'Name']) !!}
+    </div>
+    <div class="col-sm-6">
+        {!! Form::text('ncemail', null, ['required', 'class'=>'form-control form-control-profile', 'id'=>'ncemail', 'placeholder'=>'Email']) !!}
+    </div>
+</div>
+
+<div class="form-group row">
+    <div class="col-sm-6 mb-3 mb-sm-0">
+        {!! Form::text('ncmobile', null, ['required', 'class'=>'form-control form-control-profile', 'id'=>'ncmobile', 'placeholder'=>'Mobile']) !!}
+    </div>
+    <div class="col-sm-6">
+        {!! Form::password('ncpassword', ['required', 'class'=>'form-control form-control-profile', 'id'=>'ncpassword', 'placeholder'=>'password']) !!}
+    </div>
+</div>
+<!-- error -->
+<ul class="modalerror"></ul>
+<!-- error -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" id="newCustomer" class="btn btn-primary">Create</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- new customer modal end -->
 @endsection
 
 @section('script')
@@ -196,8 +242,8 @@
         $(".itemtotal").each(function(){$totalArr.push($(this).text());})
 
         // console.log($quanArr);
-//post data
-$.ajax({
+        //post data
+        $.ajax({
                 url: BASE_URL + '/placeorder',
                 type: 'post',
                 data: {
@@ -226,12 +272,50 @@ $.ajax({
 
                 }
             });            
-//post data            
-
-
+            //post data
         });
         // save button end
-        // 
+
+        // new customer start
+        $("#newCustomer").click(function(){
+            $(".modalerror").html('');
+            // alert(5);
+            $.ajax({
+                type: "post",
+                url: "{{url('newcustomer')}}",
+                data: {
+                    name: $("#ncname").val(),
+                    email: $("#ncemail").val(),
+                    mobile: $("#ncmobile").val(),
+                    password: $("#ncpassword").val(),
+                },
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if(response.success){
+                        $("#customersearch").val(response.id);
+                        $("#dyn_customer").html(response.name +" , "+ response.mobile);
+                        //clear all the form data
+                        $("#newCustomerModal").modal("hide");
+                        
+                    }
+                    else{
+                        let err = '';
+                        console.log(response.errors);
+                        for (const key in response.errors) {
+                            if (response.errors.hasOwnProperty.call(response.errors, key)) {
+                                err +=  "<li>" + response.errors[key] + "</li>";                        
+                                
+                            }
+                        }
+                        $(".modalerror").html(err);
+                    }
+                }
+            });
+
+        })
+        // new customer end
     });
+    
 </script>
 @endsection

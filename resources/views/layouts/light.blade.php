@@ -72,9 +72,9 @@
                 <div id="product" class="collapse" aria-labelledby="product" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="{{url('product')}}">Product List</a>
-                        <a class="collapse-item" href="{{url('category')}}">Product Category</a>
-                        <a class="collapse-item" href="{{url('subcategory')}}">Product Subcategory</a>
-                        <a class="collapse-item" href="{{url('brand')}}">Product Brand</a>
+                        <a class="collapse-item" href="{{url('cat')}}">Product Category</a>
+                        <a class="collapse-item" href="{{url('subcat')}}">Product Subcategory</a>
+                        <a class="collapse-item" href="{{url('brnd')}}">Product Brand</a>
                         <a class="collapse-item" href="#">Stock</a>
                     </div>
                 </div>
@@ -140,7 +140,7 @@
                 <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         {{-- <h6 class="collapse-header">Custom Components:</h6> --}}
-                        <a class="collapse-item" href="#">Staff List</a>
+                        <a class="collapse-item" href="{{url('staff')}}">Staff List</a>
                         <a class="collapse-item" href="#">Staff Payment</a>
                         <a class="collapse-item" href="#">Staff Salary</a>
                         <a class="collapse-item" href="#">Staff Attendance</a>
@@ -197,8 +197,8 @@
                 <div id="collapseEight" class="collapse" aria-labelledby="headingEight" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         {{-- <h6 class="collapse-header">Custom Components:</h6> --}}
-                        <a class="collapse-item" href="#">Purchase Report</a>
-                        <a class="collapse-item" href="#">Sale Report</a>
+                        <a class="collapse-item" href="{{url('purchaselead')}}">Purchase Report</a>
+                        <a class="collapse-item" href="{{url('salelead')}}">Sale Report</a>
                     </div>
                 </div>
             </li>
@@ -213,8 +213,8 @@
                 <div id="collapseNine" class="collapse" aria-labelledby="headingNine" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         {{-- <h6 class="collapse-header">Custom Components:</h6> --}}
-                        <a class="collapse-item" href="#">Purchase Lead</a>
-                        <a class="collapse-item" href="#">Sale Lead</a>
+                        <a class="collapse-item" href="{{url('purchaselead')}}">Purchase Lead</a>
+                        <a class="collapse-item" href="{{url('salelead')}}">Sale Lead</a>
                     </div>
                 </div>
             </li>
@@ -513,6 +513,7 @@
     <script src="{{url('assets/js/admin.min.js')}}"></script>
     <!-- UI -->
     <script src="{{url('assets/js/jquery-ui.min.js')}}"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         $(document).ready( function () {
@@ -523,6 +524,12 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
+        });
+    </script>
+    <script src="//cdn.ckeditor.com/4.14.1/standard/ckeditor.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // $('.ckeditor').ckeditor();
         });
     </script>
 

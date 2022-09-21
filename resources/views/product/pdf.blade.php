@@ -37,17 +37,22 @@
   <tr>
     <th>#</th>
     <th>Name</th>
-    <th>Mobile</th>
-    <th>Email</th>
-    <th>Address</th>
+    <th>Barcode</th>
+    <th>Purchase Price</th>
+    <th>Price</th>
+    <th>Stock</th>
   </tr>
+  @php
+  $sl = 1;
+  @endphp
   @foreach ($allproduct as $product)
   <tr>
-    <td>{{$product->id}}</td>
+    <td>{{$sl++}}</td>
     <td>{{$product->name}}</td>
-    <td>{{$product->mobile}}</td>
-    <td>{{$product->email}}</td>
-    <td>{{$product->address}}</td>
+    <td>{{$product->barcode}}</td>
+    <td>{{$product->purchase_price}}</td>
+    <td>{{$product->price}}</td>
+    <td>{{$product->quantity}}</td>
   </tr>
   @endforeach
 </table>

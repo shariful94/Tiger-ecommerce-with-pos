@@ -4,6 +4,10 @@
     Product Details
 @endsection
 
+@section('catmenu')
+@include('partial.catmenu',['categories'=>$categories])
+@endsection
+
 @section('content')
     
     
@@ -12,9 +16,10 @@
         <div class="row px-xl-5">
             <div class="col-12">
                 <nav class="breadcrumb bg-light mb-30">
-                    <a class="breadcrumb-item text-dark" href="#">Home</a>
-                    <a class="breadcrumb-item text-dark" href="#">Shop</a>
-                    <span class="breadcrumb-item active">Shop List</span>
+                    <a class="breadcrumb-item text-dark" href="{{url('/')}}">Home</a>
+                    <a class="breadcrumb-item text-dark" href="{{url('category/'.$product->category->slug)}}">{{$product->category->name}}</a>
+                    <a class="breadcrumb-item text-dark" href="{{url('subcategory/'.$product->subcategory->slug)}}">{{$product->subcategory->name}}</a>
+                    <span class="breadcrumb-item active">{{$product->slug}}</span>
                 </nav>
             </div>
         </div>
@@ -30,19 +35,11 @@
                 {{-- {{url(Storage::url($product->productimages->first()->name))}} --}}
 
                 <div class="carousel-inner bg-light">
-                    @foreach ($product->productimages as $img)
-                    <div class="carousel-item active">
+                    @foreach ($product->productimages as $i=>$img)
+                    {{$i}} - 
+                    <div class="carousel-item {{(!$i?'active':'')}}"> 
                         <img class="w-100 h-100" src="{{url(Storage::url($img->name))}}" alt="Image">
                     </div>
-                    {{-- <div class="carousel-item">
-                        <img class="w-100 h-100" src="{{url('assets/img/product-2.jpg')}}" alt="Image">
-                    </div>
-                    <div class="carousel-item">
-                        <img class="w-100 h-100" src="{{url('assets/img/product-3.jpg')}}" alt="Image">
-                    </div>
-                    <div class="carousel-item">
-                        <img class="w-100 h-100" src="{{url('assets/img/product-4.jpg')}}" alt="Image">
-                    </div> --}}
                     @endforeach
                 </div>
   
@@ -70,28 +67,28 @@
                     <small class="pt-1">(99 Reviews)</small>
                 </div>
                 <h3 class="font-weight-semi-bold mb-4">৳ {{$product->price}}</h3>
-                <p class="mb-4">{{$product->feature}}</p>
+                <p class="mb-4">{!!$product->feature!!}</p>
                     {{-- <div class="product-info">Price: <strong>121000 ৳</strong></div> --}}
                     <div class="product-info">Regular Price: ৳ <strong>{{$product->regular_price}}</strong></div>
                     <div class="product-info">Product Code: <strong>{{$product->barcode}}</strong></div>
                     <div class="product-info">Stock: <strong>{{$product->quantity}} Pcs</strong></div>
                     {{-- <div class="product-info">Brand: <strong>{{$product->brand->name}}</strong></div> --}}
                 <div class="d-flex align-items-center mb-4 pt-2">
-                    <div class="input-group quantity mr-3" style="width: 130px;">
-                        <div class="input-group-btn">
-                            <button class="btn btn-primary btn-minus">
-                                <i class="fa fa-minus"></i>
-                            </button>
+                        <div class="input-group quantity mr-3" style="width: 130px;">
+                            <div class="input-group-btn">
+                                <button class="btn btn-primary btn-minus">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                            <input type="text" class="form-control bg-secondary border-0 text-center" value="1">
+                            <div class="input-group-btn">
+                                <button class="btn btn-primary btn-plus">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
                         </div>
-                        <input type="text" class="form-control bg-secondary border-0 text-center" value="1">
-                        <div class="input-group-btn">
-                            <button class="btn btn-primary btn-plus">
-                                <i class="fa fa-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <button class="btn btn-primary px-3 mr-3"><i class="fa fa-shopping-cart mr-1"></i> Add To Cart</button>
-                    <button class="btn btn-primary px-3"><i class="fa fa-heart mr-1"></i> Wishlist</button>
+                        <button class="btn btn-primary px-3 mr-3"><i class="fa fa-shopping-cart mr-1"></i> Add To Cart</button>
+                        <button class="btn btn-primary px-3" id="favbtn" data-productid="{{$product->id}}"><i class="fa fa-heart mr-1"></i> Wishlist</button>
                 </div>
                 <div class="d-flex pt-2">
                     <strong class="text-dark mr-2">Share on:</strong>
@@ -123,12 +120,12 @@
                 </div>
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="tab-pane-1">
-                        <h4 class="mb-3">Product Description</h4>
-                        <p>{{$product->description}}</p>
+                        {{-- <h4 class="mb-3">Product Description</h4> --}}
+                        <p>{!!$product->description!!}</p>
                     </div>
                     <div class="tab-pane fade" id="tab-pane-2">
-                        <h4 class="mb-3">Additional Information</h4>
-                        <p>{{$product->information}}</p>
+                        {{-- <h4 class="mb-3">Additional Information</h4> --}}
+                        <p>{!!$product->information!!}</p>
                         {{-- <div class="row">
                             <div class="col-md-6">
                                 <ul class="list-group list-group-flush">
@@ -363,4 +360,41 @@
 
 
 
+@endsection
+
+@section('script')
+    <script>
+        var BASE_URL = "{{url('/')}}";
+        $(document).ready(function() {
+            $("#favbtn").click(function() {
+                var productid = $(this).data("productid");
+                // alert(productid);
+                // return;
+                $.post( BASE_URL + "/favourite",
+                {
+                    pid: productid
+                }, function(d) {
+                    if(d.error){
+                        Swal.fire({
+                        position: 'top',
+                        icon: 'warning',
+                        title: d.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                        })
+                    }else
+                    {
+                        $("span.wishlistcount").html(d.ti);
+                        Swal.fire({
+                        position: 'top',
+                        icon: 'success',
+                        title: d.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                        })
+                    }
+                })
+            });
+        });
+    </script>
 @endsection

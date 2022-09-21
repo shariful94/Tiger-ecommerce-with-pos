@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('user_id')->unsigned()->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
             $table->bigInteger('customer_id')->unsigned();
             $table->foreign('customer_id')->references('id')->on('customers')->onDelete('restrict');
@@ -26,6 +26,7 @@ return new class extends Migration
             $table->bigInteger('payment_type')->unsigned();
             $table->foreign('payment_type')->references('id')->on('accounts')->onDelete('restrict');
             $table->text('trxId')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -1,1 +1,0 @@
-in config view service  have to add serially

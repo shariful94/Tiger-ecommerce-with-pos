@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateCapitalRequest;
 use App\Models\Account;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+Use PDF;
 
 class CapitalController extends Controller
 {
@@ -127,5 +128,36 @@ class CapitalController extends Controller
         if(Capital::destroy($capital->id)){
             return back()->with('message',$capital->id. ' Deleted!!!!');
         }
+    }
+    public function export_capital_pdf()
+    {
+        $allcapital= Capital::get();
+        $pdf = PDF::loadView('capital.pdf',compact('allcapital'));
+        // $pdf = PDF::loadView('supplier.pdf');
+        return $pdf->download('capitallist.pdf');
+    }
+    public function trashed()
+    {
+        $allcapital = Capital::onlyTrashed()->get();
+        return view('capital.trashed',compact('allcapital'))->with('user',Auth::user());
+    }
+
+    public function trashedRestore($id){
+        $capital = Capital::onlyTrashed()->findOrFail($id);
+        $capital->restore();
+        return back();
+    }
+
+    public function trashedDelete($id){
+        $capital = Capital::onlyTrashed()->findOrFail($id);
+        $capital->forceDelete();
+        return back();
+    }
+    public function export_capitallist_pdf()
+    {
+        $allcapital = Capital::onlyTrashed()->get();
+        $pdf = PDF::loadView('capital.pdflist',compact('allcapital'));
+        // $pdf = PDF::loadView('supplier.pdf');
+        return $pdf->download('capitallist.pdf');
     }
 }

@@ -117,6 +117,9 @@
                                 <i class="fas fa-trash"></i>
                             </a>
                             {!! Form::close() !!}
+                            {{-- <div class="input-group-btn mx-2">
+                                <button class="btn btn-sm btn-danger btn-circle delete" type="button" value="{{$product->id}}"><i class="fa fa-times"></i></button>
+                            </div> --}}
                             <a href="{{url('product/'.$product->slug.'/edit')}}" class="btn btn-primary btn-circle btn-sm" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>
@@ -134,4 +137,52 @@
         </div>
     </div>
 </div>
+
+@endsection
+@section('script')
+    <script>
+    var BASE_URL = "{{url('/')}}";
+        $(document).ready(function(){
+            $('.delete').click(function(e){
+                e.preventDefault();
+                var id = $(this).val();
+                // alert(id);
+                // return;
+                Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        method: 'POST',
+                        url: BASE_URL + '/product_delete',
+                        data: {
+                            'product_id' : id,
+                            'delete' : true
+                        },
+                        success: function(response){
+                            Swal.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        );
+                        // $("#wish_table").load(location.href + " #wish_table");
+
+                        setTimeout(function(){
+                        location.reload();
+                        }, 1000);
+                        }
+                    })   
+                }
+                })
+            });
+        });
+
+        
+    </script>
 @endsection

@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateTransferRequest;
 use App\Models\Account;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use PDF;
 
 class TransferController extends Controller
 {
@@ -140,5 +141,36 @@ class TransferController extends Controller
         if (Transfer::destroy($transfer->id)) {
             return back()->with('message', $transfer->id . ' Deleted!!!!');
         }
+    }
+    public function export_transfer_pdf()
+    {
+        $alltransfer = Transfer::get();
+        $pdf = PDF::loadView('transfer.pdf',compact('alltransfer'));
+        // $pdf = PDF::loadView('supplier.pdf');
+        return $pdf->download('Transferlist.pdf');
+    }
+    public function trashed()
+    {
+        $alltransfer = Transfer::onlyTrashed()->get();
+        return view('transfer.trashed',compact('alltransfer'))->with('user',Auth::user());
+    }
+
+    public function trashedRestore($id){
+        $transfer = Transfer::onlyTrashed()->findOrFail($id);
+        $transfer->restore();
+        return back();
+    }
+
+    public function trashedDelete($id){
+        $transfer = Transfer::onlyTrashed()->findOrFail($id);
+        $transfer->forceDelete();
+        return back();
+    }
+    public function export_transferlist_pdf()
+    {
+        $alltransfer = Transfer::onlyTrashed()->get();
+        $pdf = PDF::loadView('transfer.pdflist',compact('alltransfer'));
+        // $pdf = PDF::loadView('supplier.pdf');
+        return $pdf->download('transferlist.pdf');
     }
 }

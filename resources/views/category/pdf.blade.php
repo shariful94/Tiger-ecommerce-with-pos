@@ -37,17 +37,16 @@
   <tr>
     <th>#</th>
     <th>Name</th>
-    <th>Mobile</th>
-    <th>Email</th>
-    <th>Address</th>
+    <th>Icon</th>
   </tr>
+  @php
+      $sl = 1;
+  @endphp
   @foreach ($allcategory as $category)
   <tr>
-    <td>{{$category->id}}</td>
+    <td>{{$sl++}}</td>
     <td>{{$category->name}}</td>
-    <td>{{$category->mobile}}</td>
-    <td>{{$category->email}}</td>
-    <td>{{$category->address}}</td>
+    <td> <img src="{{url(Storage::url($category->icon))}}" class="iconimage" alt="Icon" width="70px" height="70px">  </td>
   </tr>
   @endforeach
 </table>
